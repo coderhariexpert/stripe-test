@@ -1,103 +1,103 @@
-require("dotenv").config();
-const express = require("express");
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+require('dotenv').config()
+const express = require('express')
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
 
-const app = express();
+const app = express()
 
-app.set("view engine", "ejs");
+app.set('view engine', 'ejs')
 
-app.get("/", (req, res) => {
-  res.render("index.ejs");
-});
+app.get('/', (req, res) => {
+    res.render('index.ejs')
+})
 
-app.post("/checkout_basic", async (req, res) => {
-  const session = await stripe.checkout.sessions.create({
-    line_items: [
-      {
-        price_data: {
-          currency: "usd",
-          product_data: {
-            name: "Basic Plan",
-          },
-          unit_amount: 10 * 100,
-        },
-        quantity: 1,
-      },
-    ],
-    mode: "payment",
-    shipping_address_collection: {
-      allowed_countries: ["US", "BR"],
-    },
-    success_url: `${process.env.BASE_URL}/complete?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `https://stripeweb-zsk7.onrender.com/cancel`,
-  });
+app.post('/checkout_basic', async (req, res) => {
+        const session = await stripe.checkout.sessions.create({
+            line_items: [
+                {
+                    price_data: {
+                        currency: 'usd',
+                        product_data: {
+                            name: 'Basic Plan'
+                        },
+                        unit_amount: 10 * 100
+                    },
+                    quantity: 1
+                },          
+            ],
+            mode: 'payment',
+            shipping_address_collection: {
+                allowed_countries: ['US', 'BR']
+            },
+            success_url: `${process.env.BASE_URL}/complete?session_id={CHECKOUT_SESSION_ID}`,
+            cancel_url: `${process.env.BASE_URL}/cancel`
+        })
 
-  res.redirect(session.url);
-});
-app.post("/checkout_pro", async (req, res) => {
-  const session = await stripe.checkout.sessions.create({
-    line_items: [
-      {
-        price_data: {
-          currency: "usd",
-          product_data: {
-            name: "Pro Plan",
-          },
-          unit_amount: 10 * 100,
-        },
-        quantity: 1,
-      },
-    ],
-    mode: "payment",
-    shipping_address_collection: {
-      allowed_countries: ["US", "BR"],
-    },
-    success_url: `${process.env.BASE_URL}/complete?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `https://stripeweb-zsk7.onrender.com/cancel`,
-  });
+        res.redirect(session.url)
+    })
+    app.post('/checkout_pro', async (req, res) => {
+        const session = await stripe.checkout.sessions.create({
+            line_items: [
+                {
+                    price_data: {
+                        currency: 'usd',
+                        product_data: {
+                            name: 'Basic Plan'
+                        },
+                        unit_amount: 10 * 100
+                    },
+                    quantity: 1
+                },          
+            ],
+            mode: 'payment',
+            shipping_address_collection: {
+                allowed_countries: ['US', 'BR']
+            },
+            success_url: `${process.env.BASE_URL}/complete?session_id={CHECKOUT_SESSION_ID}`,
+            cancel_url: `${process.env.BASE_URL}/cancel`
+        })
 
-  res.redirect(session.url);
-});
-app.post("/checkout_enterprise", async (req, res) => {
-  const session = await stripe.checkout.sessions.create({
-    line_items: [
-      {
-        price_data: {
-          currency: "usd",
-          product_data: {
-            name: "Enterprise Plan",
-          },
-          unit_amount: 50 * 100,
-        },
-        quantity: 1,
-      },
-    ],
-    mode: "payment",
-    shipping_address_collection: {
-      allowed_countries: ["US", "BR"],
-    },
-    success_url: `${process.env.BASE_URL}/complete?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `https://stripeweb-zsk7.onrender.com/cancel`,
-  });
+        res.redirect(session.url)
+    })
+    app.post('/checkout_enterprise', async (req, res) => {
+        const session = await stripe.checkout.sessions.create({
+            line_items: [
+                {
+                    price_data: {
+                        currency: 'usd',
+                        product_data: {
+                            name: 'Enterprise Plan'
+                        },
+                        unit_amount: 50 * 100
+                    },
+                    quantity: 1
+                },          
+            ],
+            mode: 'payment',
+            shipping_address_collection: {
+                allowed_countries: ['US', 'BR']
+            },
+            success_url: `${process.env.BASE_URL}complete?session_id={CHECKOUT_SESSION_ID}`,
+            cancel_url: `${process.env.BASE_URL}/cancel`
+        })
 
-  res.redirect(session.url);
-});
+        res.redirect(session.url)
+    })
+    
 
-app.get("/complete", async (req, res) => {
-  const result = Promise.all([
-    stripe.checkout.sessions.retrieve(req.query.session_id, {
-      expand: ["payment_intent.payment_method"],
-    }),
-    stripe.checkout.sessions.listLineItems(req.query.session_id),
-  ]);
 
-  console.log(JSON.stringify(await result));
+app.get('/complete', async (req, res) => {
+    const result = Promise.all([
+        stripe.checkout.sessions.retrieve(req.query.session_id, { expand: ['payment_intent.payment_method'] }),
+        stripe.checkout.sessions.listLineItems(req.query.session_id)
+    ])
 
-  res.send("Your payment was successful");
-});
+    console.log(JSON.stringify(await result))
 
-app.get("/cancel", (req, res) => {
-  res.redirect("/");
-});
+    res.send('Your payment was successful')
+})
 
-app.listen(3000, () => console.log("Server started on port 3000"));
+app.get('/cancel', (req, res) => {
+    res.redirect('/')
+})
+
+app.listen(3000, () => console.log('Server started on port 3000'))
