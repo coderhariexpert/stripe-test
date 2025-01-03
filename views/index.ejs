@@ -9,10 +9,10 @@
 </head>
 <body>
     <style>
-                * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
         }
 
         body {
@@ -89,7 +89,7 @@
                 <li>10 Projects</li>
                 <li>Email Support</li>
             </ul>
-            <form action="/checkout" method="post">
+            <form action="/checkout_basic" method="post">
                 <button>Choose Plan</button>
             </form>
         </div>
@@ -101,7 +101,9 @@
                 <li>Unlimited Projects</li>
                 <li>Priority Support</li>
             </ul>
-            <button>Choose Plan</button>
+            <form action="/checkout_pro" method="post">
+                <button>Choose Plan</button>
+            </form>
         </div>
         <div class="card">
             <h2>Enterprise</h2>
@@ -111,7 +113,9 @@
                 <li>Custom Projects</li>
                 <li>Dedicated Support</li>
             </ul>
-            <button>Choose Plan</button>
+            <form action="/checkout_enterprise" method="post">
+                <button>Choose Plan</button>
+            </form>
         </div>
     </div>
     <script src="../server.js"></script>

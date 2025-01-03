@@ -10,40 +10,80 @@ app.get('/', (req, res) => {
     res.render('index.ejs')
 })
 
-app.post('/checkout', async (req, res) => {
-    const session = await stripe.checkout.sessions.create({
-        line_items: [
-            {
-                price_data: {
-                    currency: 'usd',
-                    product_data: {
-                        name: 'Node.js and Express book'
+app.post('/checkout_basic', async (req, res) => {
+        const session = await stripe.checkout.sessions.create({
+            line_items: [
+                {
+                    price_data: {
+                        currency: 'usd',
+                        product_data: {
+                            name: 'Basic Plan'
+                        },
+                        unit_amount: 10 * 100
                     },
-                    unit_amount: 50 * 100
-                },
-                quantity: 1
+                    quantity: 1
+                },          
+            ],
+            mode: 'payment',
+            shipping_address_collection: {
+                allowed_countries: ['US', 'BR']
             },
-            {
-                price_data: {
-                    currency: 'usd',
-                    product_data: {
-                        name: 'JavaScript T-Shirt'
-                    },
-                    unit_amount: 20 * 100
-                },
-                quantity: 2
-            }            
-        ],
-        mode: 'payment',
-        shipping_address_collection: {
-            allowed_countries: ['US', 'BR']
-        },
-        success_url: `${process.env.BASE_URL}/complete?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${process.env.BASE_URL}/cancel`
-    })
+            success_url: `${process.env.BASE_URL}/complete?session_id={CHECKOUT_SESSION_ID}`,
+            cancel_url: `${process.env.BASE_URL}/cancel`
+        })
 
-    res.redirect(session.url)
-})
+        res.redirect(session.url)
+    })
+    app.post('/checkout_pro', async (req, res) => {
+        const session = await stripe.checkout.sessions.create({
+            line_items: [
+                {
+                    price_data: {
+                        currency: 'usd',
+                        product_data: {
+                            name: 'Pro Plan'
+                        },
+                        unit_amount: 10 * 100
+                    },
+                    quantity: 1
+                },          
+            ],
+            mode: 'payment',
+            shipping_address_collection: {
+                allowed_countries: ['US', 'BR']
+            },
+            success_url: `${process.env.BASE_URL}/complete?session_id={CHECKOUT_SESSION_ID}`,
+            cancel_url: `${process.env.BASE_URL}/cancel`
+        })
+
+        res.redirect(session.url)
+    })
+    app.post('/checkout_enterprise', async (req, res) => {
+        const session = await stripe.checkout.sessions.create({
+            line_items: [
+                {
+                    price_data: {
+                        currency: 'usd',
+                        product_data: {
+                            name: 'Enterprise Plan'
+                        },
+                        unit_amount: 50 * 100
+                    },
+                    quantity: 1
+                },          
+            ],
+            mode: 'payment',
+            shipping_address_collection: {
+                allowed_countries: ['US', 'BR']
+            },
+            success_url: `${process.env.BASE_URL}/complete?session_id={CHECKOUT_SESSION_ID}`,
+            cancel_url: `${process.env.BASE_URL}/cancel`
+        })
+
+        res.redirect(session.url)
+    })
+    
+
 
 app.get('/complete', async (req, res) => {
     const result = Promise.all([
